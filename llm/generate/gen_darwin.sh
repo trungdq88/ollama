@@ -24,15 +24,6 @@ case "${GOARCH}" in
 "amd64")
     COMMON_CPU_DEFS="${COMMON_DARWIN_DEFS} -DCMAKE_SYSTEM_PROCESSOR=${ARCH} -DCMAKE_OSX_ARCHITECTURES=${ARCH} -DLLAMA_METAL=off -DLLAMA_NATIVE=off"
 
-    # Static build for linking into the Go binary
-    init_vars
-    CMAKE_TARGETS="--target llama --target ggml"
-    CMAKE_DEFS="${COMMON_CPU_DEFS} -DBUILD_SHARED_LIBS=off -DLLAMA_ACCELERATE=off -DLLAMA_AVX=off -DLLAMA_AVX2=off -DLLAMA_AVX512=off -DLLAMA_FMA=off -DLLAMA_F16C=off ${CMAKE_DEFS}"
-    BUILD_DIR="../build/darwin/${ARCH}_static"
-    echo "Building static library"
-    build
-
-
     #
     # CPU first for the default library, set up as lowest common denominator for maximum compatibility (including Rosetta)
     #
