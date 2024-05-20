@@ -55,7 +55,7 @@ func newLlamaModel(p string) *llamaModel {
 	}
 }
 
-func (llm *llamaModel) Encode(s string) []int {
+func (llm *llamaModel) Tokenize(s string) []int {
 	cs := C.CString(s)
 	defer C.free(unsafe.Pointer(cs))
 
@@ -67,7 +67,7 @@ func (llm *llamaModel) Encode(s string) []int {
 	return nil
 }
 
-func (llm *llamaModel) Decode(i32s []int) string {
+func (llm *llamaModel) Detokenize(i32s []int) string {
 	var sb strings.Builder
 	for _, i32 := range i32s {
 		c := make([]byte, 512)

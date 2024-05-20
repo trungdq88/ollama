@@ -830,12 +830,12 @@ func (s *llmServer) Embedding(ctx context.Context, prompt string) ([]float64, er
 		return nil, fmt.Errorf("unexpected server status: %s", status.ToString())
 	}
 
-	data, err := json.Marshal(TokenizeRequest{Content: prompt})
-	if err != nil {
+	var b bytes.Buffer
+	if err := json.NewEncoder(&b).Encode(EmbeddingRequest{Content: prompt}); err != nil {
 		return nil, fmt.Errorf("error marshaling embed data: %w", err)
 	}
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, fmt.Sprintf("http://127.0.0.1:%d/embedding", s.port), bytes.NewBuffer(data))
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, fmt.Sprintf("http://127.0.0.1:%d/embedding", s.port), &b)
 	if err != nil {
 		return nil, fmt.Errorf("error creating embed request: %w", err)
 	}
@@ -865,28 +865,12 @@ func (s *llmServer) Embedding(ctx context.Context, prompt string) ([]float64, er
 	return embedding.Embedding, nil
 }
 
-type TokenizeRequest struct {
-	Content string `json:"content"`
-}
-
-type TokenizeResponse struct {
-	Tokens []int `json:"tokens"`
-}
-
 func (s *llmServer) Tokenize(ctx context.Context, content string) ([]int, error) {
-	return s.llamaModel.Encode(content), nil
-}
-
-type DetokenizeRequest struct {
-	Tokens []int `json:"tokens"`
-}
-
-type DetokenizeResponse struct {
-	Content string `json:"content"`
+	return s.llamaModel.Tokenize(content), nil
 }
 
 func (s *llmServer) Detokenize(ctx context.Context, tokens []int) (string, error) {
-	return s.llamaModel.Decode(tokens), nil
+	return s.llamaModel.Detokenize(tokens), nil
 }
 
 func (s *llmServer) Close() error {
