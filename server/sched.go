@@ -7,6 +7,7 @@ import (
 	"log/slog"
 	"reflect"
 	"runtime"
+	"slices"
 	"sort"
 	"strings"
 	"sync"
@@ -17,7 +18,6 @@ import (
 	"github.com/ollama/ollama/gpu"
 	"github.com/ollama/ollama/llm"
 	"github.com/ollama/ollama/server/envconfig"
-	"golang.org/x/exp/slices"
 )
 
 type LlmRequest struct {
