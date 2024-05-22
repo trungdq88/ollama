@@ -268,7 +268,6 @@ func TestNameIsValidPart(t *testing.T) {
 			}
 		})
 	}
-
 }
 
 func TestFilepathAllocs(t *testing.T) {
@@ -382,6 +381,5 @@ func FuzzName(f *testing.F) {
 				t.Errorf("String() = %q; want %q", n.String(), s)
 			}
 		}
-
 	})
 }
